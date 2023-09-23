@@ -1,0 +1,19 @@
+.container {
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.input-group {
+    margin-bottom: 10px;
+}
+
+.phone-book-list {
+    list-style: none;
+    padding: 0;
+}
+
+.phone-book-item {
+    margin-bottom: 10px;
+}
