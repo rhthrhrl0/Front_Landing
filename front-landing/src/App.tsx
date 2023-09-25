@@ -1,8 +1,18 @@
 import React from 'react';
-import { AppRouter } from './routes/AppRouter';
+import {ApolloClient, InMemoryCache,ApolloProvider} from '@apollo/client'
+import {AppRouter} from './routes/AppRouter';
 
 const App = () => {
-    return <AppRouter />;
+    const client = new ApolloClient({
+        uri: 'https://moviethree.synology.me/back/graphql',
+        cache: new InMemoryCache()
+    })
+    return (
+        <ApolloProvider client={client}>
+            <AppRouter/>
+        </ApolloProvider>
+    );
+
 };
 
 export default App;
