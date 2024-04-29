@@ -17,6 +17,7 @@ interface InputProps {
     variant?: 'filled' | 'outlined' | 'standard'; // 이게 참이면, input 대신 textArea 엘리먼트가 대신 렌더링 된다고 함.
     fullWidth?: boolean;
     placeholder?: string;
+    error?: boolean;
 }
 
 const Input = ({
@@ -32,7 +33,8 @@ const Input = ({
                    value,
                    variant,
                    fullWidth,
-                   placeholder
+                   placeholder,
+                   error
                }: InputProps) => {
     return <TextField
         name={name}
@@ -48,6 +50,7 @@ const Input = ({
         multiline={multiline}
         fullWidth={fullWidth}
         placeholder={placeholder}
+        error={error}
     />;
 }
 
@@ -64,7 +67,8 @@ Input.defaultProps = {
     maxRows: 1,
     multiline: false,
     fullWidth: false,
-    placeholder: ''
+    placeholder: '',
+    error: false
 }
 
 export default Input;
