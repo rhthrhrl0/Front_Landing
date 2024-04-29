@@ -18,6 +18,7 @@ interface InputProps {
     fullWidth?: boolean;
     placeholder?: string;
     error?: boolean;
+    helperText?: string;
 }
 
 const Input = ({
@@ -34,7 +35,8 @@ const Input = ({
                    variant,
                    fullWidth,
                    placeholder,
-                   error
+                   error,
+                   helperText
                }: InputProps) => {
     return <TextField
         name={name}
@@ -51,6 +53,7 @@ const Input = ({
         fullWidth={fullWidth}
         placeholder={placeholder}
         error={error}
+        helperText={helperText}
     />;
 }
 
@@ -68,7 +71,8 @@ Input.defaultProps = {
     multiline: false,
     fullWidth: false,
     placeholder: '',
-    error: false
+    error: false,
+    helperText: ''
 }
 
 export default Input;
