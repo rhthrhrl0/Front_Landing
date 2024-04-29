@@ -4,17 +4,19 @@ import classNames from "classnames";
 import style from './style/Input.module.scss';
 
 interface InputProps {
-    className?: string | undefined;
+    className?: string;
     label?: string;
-    maxRows?: string | number | undefined;
-    autoFocus?: boolean | undefined;
-    multiline?: boolean | undefined;
-    name?: string | undefined;
+    maxRows?: string | number;
+    autoFocus?: boolean;
+    multiline?: boolean;
+    name?: string;
     onChange?: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
-    rows?: string | number | undefined;
-    type?: React.HTMLInputTypeAttribute | undefined; // 스크롤 단위 줄수
+    rows?: string | number;
+    type?: React.HTMLInputTypeAttribute; // 스크롤 단위 줄수
     value?: unknown; // 정말 말그대로 최대 줄수
     variant?: 'filled' | 'outlined' | 'standard'; // 이게 참이면, input 대신 textArea 엘리먼트가 대신 렌더링 된다고 함.
+    fullWidth?: boolean;
+    placeholder?: string;
 }
 
 const Input = ({
@@ -28,7 +30,9 @@ const Input = ({
                    rows,
                    type,
                    value,
-                   variant
+                   variant,
+                   fullWidth,
+                   placeholder
                }: InputProps) => {
     return <TextField
         name={name}
@@ -42,6 +46,8 @@ const Input = ({
         maxRows={maxRows}
         type={type}
         multiline={multiline}
+        fullWidth={fullWidth}
+        placeholder={placeholder}
     />;
 }
 
@@ -50,13 +56,15 @@ Input.defaultProps = {
     className: `${style.input}`,
     autoFocus: false,
     label: undefined,
-    variant: 'outlined',
+    variant: "outlined",
     type: 'text',
     value: '',
     onChange: undefined,
     rows: 1,
     maxRows: 1,
-    multiline: false
+    multiline: false,
+    fullWidth: false,
+    placeholder: ''
 }
 
 export default Input;
