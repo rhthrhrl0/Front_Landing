@@ -1,5 +1,5 @@
-import React from "react";
-import {TextField} from "@mui/material";
+import React, {useMemo} from "react";
+import {InputAdornment, TextField} from "@mui/material";
 import classNames from "classnames";
 import style from './style/Input.module.scss';
 
@@ -19,6 +19,8 @@ interface InputProps {
     placeholder?: string;
     error?: boolean;
     helperText?: string;
+    disabled?: boolean;
+    endItem?: React.ReactNode;
 }
 
 const Input = ({
@@ -36,8 +38,22 @@ const Input = ({
                    fullWidth,
                    placeholder,
                    error,
-                   helperText
+                   helperText,
+                   disabled,
+                   endItem
                }: InputProps) => {
+    const end: undefined | React.ReactNode = useMemo(() => {
+        if (endItem !== undefined) {
+            return <InputAdornment
+                position="end"
+                sx={{padding: "27.5px 14px"}}
+            >
+                {endItem}
+            </InputAdornment>
+        }
+        return undefined;
+    }, [endItem])
+
     return <TextField
         name={name}
         className={classNames(className, style.input)} // esLint에서는 dot 접근을 권유함.
@@ -54,6 +70,10 @@ const Input = ({
         placeholder={placeholder}
         error={error}
         helperText={helperText}
+        disabled={disabled}
+        InputProps={{
+            endAdornment: end,
+        }}
     />;
 }
 
@@ -72,7 +92,9 @@ Input.defaultProps = {
     fullWidth: false,
     placeholder: '',
     error: false,
-    helperText: ''
+    helperText: '',
+    disabled: false,
+    endItem: undefined
 }
 
 export default Input;
