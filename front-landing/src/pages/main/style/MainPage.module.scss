@@ -1,4 +1,4 @@
-.login {
+.main-page{
   width: 512px;
   position: relative;
   background: white;
@@ -9,11 +9,4 @@
   flex-direction: column;
   gap: 20px;
   padding: 12px;
-
-  &__id-pwd {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
 }
