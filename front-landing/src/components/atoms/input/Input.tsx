@@ -1,7 +1,10 @@
 import React, {useMemo} from "react";
 import {InputAdornment, TextField} from "@mui/material";
 import classNames from "classnames";
+import IconButton from '@mui/material/IconButton';
+import {Visibility, VisibilityOff} from "@mui/icons-material";
 import style from './style/Input.module.scss';
+
 
 interface InputProps {
     className?: string;
@@ -42,6 +45,12 @@ const Input = ({
                    disabled,
                    endItem
                }: InputProps) => {
+    const [showPassword, setShowPassword] = React.useState(false);
+    const handleClickShowPassword = () => setShowPassword((show) => !show);
+    const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.preventDefault();
+    };
+
     const end: undefined | React.ReactNode = useMemo(() => {
         if (endItem !== undefined) {
             return <InputAdornment
@@ -51,8 +60,29 @@ const Input = ({
                 {endItem}
             </InputAdornment>
         }
+        if (type === 'password') {
+            return <InputAdornment position="end">
+                <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                    onMouseDown={handleMouseDownPassword}
+                    edge="end"
+                >
+                    {showPassword ? <VisibilityOff/> : <Visibility/>}
+                </IconButton>
+            </InputAdornment>
+        }
         return undefined;
-    }, [endItem])
+    }, [endItem, showPassword])
+
+    const inputType: undefined | string = useMemo(() => {
+        if (type === 'password') {
+            if (showPassword) return 'text';
+            return 'password';
+        }
+        return type;
+    }, [type, showPassword])
+
 
     return <TextField
         name={name}
@@ -64,7 +94,7 @@ const Input = ({
         onChange={onChange}
         rows={rows}
         maxRows={maxRows}
-        type={type}
+        type={inputType}
         multiline={multiline}
         fullWidth={fullWidth}
         placeholder={placeholder}

@@ -1,9 +1,14 @@
 import React, {useEffect, useState} from "react";
 import classNames from "classnames";
+import {useNavigate} from "react-router-dom";
 import IdPassword from "../../components/molcules/idPassword/IdPassword";
 import EmailCertification from "../../components/molcules/emailCertification/EmailCertification";
 import EmailConfirm from "../../components/molcules/emailConfirm/EmailConfirm";
 import {httpClient} from "../../util/network";
+import Card from "../../components/atoms/card/Card";
+import Input from "../../components/atoms/input/Input";
+import Divider from "../../components/atoms/divider/Divider";
+import Button from "../../components/atoms/button/Button";
 import style from "./style/SignupPage.module.scss";
 
 interface SignupPageProps {
@@ -11,28 +16,90 @@ interface SignupPageProps {
 }
 
 const SignupPage = ({className}: SignupPageProps) => {
+    // navigate
+    const navigate = useNavigate();
+
+    // IdPassword
+    const [id, setId] = useState('');
+    const [pwd, setPwd] = useState('');
+    const [idError, setIdError] = useState(false);
+    const [pwdError, setPwdError] = useState(false);
+    const [idErrorHelperText, setIdErrorHelperText] = useState('');
+    const [pwdErrorHelperText, setPwdErrorHelperText] = useState('');
+    const [focusOnId, setFocusOnId] = useState(true);
+    const [focusOnPwd, setFocusOnPwd] = useState(false);
+
+    const onIdChange: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> = (e) => {
+        setId(e.target.value)
+    }
+    const onPwdChange: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> = (e) => {
+        setPwd(e.target.value)
+    }
+
+    // pwdConfirm
+    const [pwdConfirm, setPwdConfirm] = useState('');
+    const [pwdConfirmError, setPwdConfirmError] = useState(false);
+    const [pwdConfirmHelperText, setPwdConfirmHelperText] = useState('');
+    const onPwdConfirmChange: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> = (e) => {
+        setPwdConfirm(e.target.value)
+    }
+
+    // EmailCertification
+    const [email, setEmail] = useState('');
+    const [emailError, setEmailError] = useState(false);
+    const [emailErrorHelperText, setEmailErrorHelperText] = useState('');
+    const [emailDisabled, setEmailDisabled] = useState(false);
+    const onEmailChange: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> = (e) => {
+        setEmail(e.target.value);
+    }
+    const emailSubmit: React.MouseEventHandler<HTMLButtonElement> = (e) => {
+        httpClient.post("auth/mail", {
+                "email": `${email}`
+            },
+        ).then(response => {
+            alert('됐어요~');
+            setEmailDisabled(true);
+            setEmailError(false);
+            setEmailErrorHelperText('');
+            setRemainTime(180);
+        }).catch(error => {
+            if (error.response !== undefined && error.response.data.code === "ALREADY_SEND_CODE") {
+                alert('최근에 이미 보낸 적이 있네요. 어서 하세요~');
+                setEmailDisabled(true);
+                setEmailError(false);
+                setEmailErrorHelperText('');
+                setRemainTime(180);
+            } else {
+                alert(`이메일 요청 실패~ ${error}`);
+                setEmailError(true);
+                setEmailErrorHelperText('요청에 실패했습니다.');
+                setRemainTime(undefined);
+            }
+        });
+    }
+
     // EmailConfirm
     const [remainTime, setRemainTime] = useState<undefined | number>(undefined);
-    const [confirmValue, setConfirmValue] = useState('');
-    const onConfirmValueChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-        setConfirmValue(e.target.value)
+    const [authCode, setAuthCode] = useState('');
+    const onAuthCodeChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+        setAuthCode(e.target.value)
     }
-    const [disabled, setDisabled] = useState(false);
-    const [emailAuthError, setEmailAuthError] = useState(false);
+    const [AuthCodeDisabled, setAuthCodeDisabled] = useState(false);
+    const [authCodeError, setAuthCodeError] = useState(false);
     const onSubmit: React.MouseEventHandler<HTMLButtonElement> = (e) => {
         httpClient.post("auth/code", {
-                "email": `${emailValue}`,
-                "authCode": `${confirmValue}`,
+                "email": `${email}`,
+                "authCode": `${authCode}`,
             },
         ).then(response => {
             alert('됐어요~')
-            setDisabled(true)
+            setAuthCodeDisabled(true)
             setRemainTime(undefined);
-            setEmailAuthError(false);
+            setAuthCodeError(false);
         }).catch(error => {
             console.log(`이메일 인증 실패~ ${error}`);
             alert(`이메일 인증 실패~ ${error}`);
-            setEmailAuthError(true);
+            setAuthCodeError(true);
         });
     }
 
@@ -53,63 +120,60 @@ const SignupPage = ({className}: SignupPageProps) => {
         return () => clearInterval(Counter); // 등록했던 타이머를 지움.
     }, [remainTime])
 
-    // IdPassword
-    const [id, setId] = useState('');
-    const [pwd, setPwd] = useState('');
-    const [idError, setIdError] = useState(false);
-    const [pwdError, setPwdError] = useState(false);
-    const [idErrorHelperText, setIdErrorHelperText] = useState('');
-    const [pwdErrorHelperText, setPwdErrorHelperText] = useState('');
-    const [focusOnId, setFocusOnId] = useState(true);
-    const [focusOnPwd, setFocusOnPwd] = useState(false);
-
-    const onIdChange: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> = (e) => {
-        setId(e.target.value)
-    }
-    const onPwdChange: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> = (e) => {
-        setPwd(e.target.value)
+    // 이름
+    const [userName, setUserName] = useState('');
+    const [userNameError, setUserNameError] = useState(false);
+    const [userNameHelperText, setUserNameHelperText] = useState('');
+    const onUserNameChange: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> = (e) => {
+        setUserName(e.target.value)
     }
 
-    // EmailCertification
-    const [emailValue, setEmailValue] = useState('');
-    const [emailError, setEmailError] = useState(false);
-    const [emailErrorHelperText, setEmailErrorHelperText] = useState('');
-    const [emailDisabled, setEmailDisabled] = useState(false);
-    const onEmailChange: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> = (e) => {
-        setEmailValue(e.target.value);
-    }
-    const emailSubmit: React.MouseEventHandler<HTMLButtonElement> = (e) => {
-        httpClient.post("auth/mail", {
-                "email": `${emailValue}`
+    // 회원가입 버튼
+    const onSignUpClick = () => {
+        const isSamePwd: boolean = (pwd === pwdConfirm);
+        if (!isSamePwd) {
+            setPwdConfirmError(true);
+            setPwdConfirmHelperText('비밀번호를 재확인해주세요');
+            return;
+        }
+        setPwdConfirmError(false);
+        setPwdConfirmHelperText('');
+        httpClient.post("user/signup", {
+                "id": `${id}`,
+                "pwd": `${pwd}`,
+                "pwdConfirm": `${pwdConfirm}`,
+                "userName": `${userName}`,
+                "email": `${email}`
             },
         ).then(response => {
-            alert('됐어요~');
-            setEmailDisabled(true);
-            setEmailError(false);
-            setRemainTime(180);
-        }).catch(error => {
-            if (error.response !== undefined && error.response.data.code === "ALREADY_SEND_CODE") {
-                alert('최근에 이미 보낸 적이 있네요. 어서 하세요~');
-                setEmailDisabled(true);
-                setEmailError(false);
-                setRemainTime(180);
-            } else {
-                alert(`이메일 요청 실패~ ${error}`);
-                setEmailError(true);
-                setRemainTime(undefined);
+            setIdError(false)
+            if (window.confirm("회원가입 성공! 로그인 창으로 이동하시겠습니까?")) {
+                navigate(-1)
             }
+        }).catch(error => {
+            console.log(`회원가입 실패~ ${error}`);
+            alert(`회원가입 실패~ ${error}`);
+            setIdError(false)
         });
     }
 
-    return <div className={classNames(className, style['sign-up-page'])}>
-        <IdPassword idValue={id} pwdValue={pwd} onIdChange={onIdChange} onPwdChange={onPwdChange}
+    return <Card className={classNames(className, style['sign-up-page'])}>
+        <IdPassword className={style['sign-up-page__id-pwd']} idValue={id} pwdValue={pwd} onIdChange={onIdChange} onPwdChange={onPwdChange}
                     idErrorHelperText={idErrorHelperText} pwdErrorHelperText={pwdErrorHelperText} idError={idError}
                     pwdError={pwdError} focusOnId={focusOnId} focusOnPwd={focusOnPwd}/>
-        <EmailCertification emailValue={emailValue} error={emailError} emailErrorHelperText={emailErrorHelperText}
+        <Input label="비밀번호 확인" value={pwdConfirm} error={pwdConfirmError} helperText={pwdConfirmHelperText}
+               onChange={onPwdConfirmChange} type="password"/>
+        <Divider/>
+        <EmailCertification className={style['sign-up-page__email-certification']} emailValue={email} error={emailError} emailErrorHelperText={emailErrorHelperText}
                             onEmailChange={onEmailChange} onSubmit={emailSubmit} disabled={emailDisabled}/>
-        <EmailConfirm onSubmit={onSubmit} confirmValue={confirmValue} disabled={disabled}
-                      onConfirmValueChange={onConfirmValueChange} remainTime={remainTime} error={emailAuthError}/>
-    </div>
+        <EmailConfirm className={style['sign-up-page__email-confirm']} onSubmit={onSubmit} confirmValue={authCode} disabled={AuthCodeDisabled}
+                      onConfirmValueChange={onAuthCodeChange} remainTime={remainTime} error={authCodeError}/>
+        <Divider/>
+        <Input label="이름" value={userName} onChange={onUserNameChange} error={userNameError}
+               helperText={userNameHelperText}/>
+        <Divider/>
+        <Button size='large' variant='outlined' onClick={onSignUpClick}>회원가입</Button>
+    </Card>
 };
 
 SignupPage.defaultProps = {

@@ -1,5 +1,29 @@
 .sign-up-page {
+  width: 512px;
+  position: relative;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.04);
+  margin: 96px auto 32px;
   display: flex;
   flex-direction: column;
   gap: 20px;
+
+  &__id-pwd {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  &__email-certification {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  &__email-confirm {
+    display: flex;
+    flex-direction: row;
+    gap: 8px; /* 자식 요소들 간의 간격을 8px로 설정합니다. */
+  }
 }

@@ -2,7 +2,6 @@ import React, {useMemo} from "react";
 import classNames from "classnames";
 import Input from "../../atoms/input/Input";
 import Button from "../../atoms/button/Button";
-import Divider from "../../atoms/divider/Divider";
 import style from "./style/EmailCertification.module.scss";
 
 interface EmailCertificationProps {
@@ -38,7 +37,6 @@ const EmailCertification = ({
                onChange={onEmailChange} error={error} helperText={errorMessage} disabled={disabled}/>
         <Button className={style['email-certification__submit-button']} variant={submitButtonVariant}
                 onClick={onSubmit} disabled={disabled}>이메일 인증</Button>
-        <Divider/>
     </div>
 }
 

@@ -1,8 +1,4 @@
 .email-confirm {
-  display: flex;
-  flex-direction: row;
-  gap: 8px; /* 자식 요소들 간의 간격을 8px로 설정합니다. */
-
   &__input {
     flex: 1;
     &__time-limit{
