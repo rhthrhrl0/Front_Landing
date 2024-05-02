@@ -4,7 +4,7 @@ import {useNavigate} from "react-router-dom";
 import IdPassword from "../../components/molcules/idPassword/IdPassword";
 import EmailCertification from "../../components/molcules/emailCertification/EmailCertification";
 import EmailConfirm from "../../components/molcules/emailConfirm/EmailConfirm";
-import {httpClient} from "../../util/network";
+import AuthRepository from "../../util/network";
 import Card from "../../components/atoms/card/Card";
 import Input from "../../components/atoms/input/Input";
 import Divider from "../../components/atoms/divider/Divider";
@@ -53,10 +53,7 @@ const SignupPage = ({className}: SignupPageProps) => {
         setEmail(e.target.value);
     }
     const emailSubmit: React.MouseEventHandler<HTMLButtonElement> = (e) => {
-        httpClient.post("auth/mail", {
-                "email": `${email}`
-            },
-        ).then(response => {
+        AuthRepository.requestAuthCode(email).then(response => {
             alert('됐어요~');
             setEmailDisabled(true);
             setEmailError(false);
@@ -87,11 +84,7 @@ const SignupPage = ({className}: SignupPageProps) => {
     const [AuthCodeDisabled, setAuthCodeDisabled] = useState(false);
     const [authCodeError, setAuthCodeError] = useState(false);
     const onSubmit: React.MouseEventHandler<HTMLButtonElement> = (e) => {
-        httpClient.post("auth/code", {
-                "email": `${email}`,
-                "authCode": `${authCode}`,
-            },
-        ).then(response => {
+        AuthRepository.validateAuthCode(email, authCode).then(response => {
             alert('됐어요~')
             setAuthCodeDisabled(true)
             setRemainTime(undefined);
@@ -138,14 +131,7 @@ const SignupPage = ({className}: SignupPageProps) => {
         }
         setPwdConfirmError(false);
         setPwdConfirmHelperText('');
-        httpClient.post("user/signup", {
-                "id": `${id}`,
-                "pwd": `${pwd}`,
-                "pwdConfirm": `${pwdConfirm}`,
-                "userName": `${userName}`,
-                "email": `${email}`
-            },
-        ).then(response => {
+        AuthRepository.requestSignup(id, pwd, pwdConfirm, userName, email).then(response => {
             setIdError(false)
             if (window.confirm("회원가입 성공! 로그인 창으로 이동하시겠습니까?")) {
                 navigate(-1)
@@ -158,15 +144,18 @@ const SignupPage = ({className}: SignupPageProps) => {
     }
 
     return <Card className={classNames(className, style['sign-up-page'])}>
-        <IdPassword className={style['sign-up-page__id-pwd']} idValue={id} pwdValue={pwd} onIdChange={onIdChange} onPwdChange={onPwdChange}
+        <IdPassword className={style['sign-up-page__id-pwd']} idValue={id} pwdValue={pwd} onIdChange={onIdChange}
+                    onPwdChange={onPwdChange}
                     idErrorHelperText={idErrorHelperText} pwdErrorHelperText={pwdErrorHelperText} idError={idError}
                     pwdError={pwdError} focusOnId={focusOnId} focusOnPwd={focusOnPwd}/>
         <Input label="비밀번호 확인" value={pwdConfirm} error={pwdConfirmError} helperText={pwdConfirmHelperText}
                onChange={onPwdConfirmChange} type="password"/>
         <Divider/>
-        <EmailCertification className={style['sign-up-page__email-certification']} emailValue={email} error={emailError} emailErrorHelperText={emailErrorHelperText}
+        <EmailCertification className={style['sign-up-page__email-certification']} emailValue={email} error={emailError}
+                            emailErrorHelperText={emailErrorHelperText}
                             onEmailChange={onEmailChange} onSubmit={emailSubmit} disabled={emailDisabled}/>
-        <EmailConfirm className={style['sign-up-page__email-confirm']} onSubmit={onSubmit} confirmValue={authCode} disabled={AuthCodeDisabled}
+        <EmailConfirm className={style['sign-up-page__email-confirm']} onSubmit={onSubmit} confirmValue={authCode}
+                      disabled={AuthCodeDisabled}
                       onConfirmValueChange={onAuthCodeChange} remainTime={remainTime} error={authCodeError}/>
         <Divider/>
         <Input label="이름" value={userName} onChange={onUserNameChange} error={userNameError}
