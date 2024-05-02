@@ -13,7 +13,8 @@ interface EmailCertificationProps {
     onEmailChange?: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
     onSubmit?: React.MouseEventHandler<HTMLButtonElement>,
     error?: boolean,
-    emailErrorHelperText?: string
+    emailErrorHelperText?: string,
+    disabled?: boolean
 }
 
 // 이메일 입력하고 인증 메일 요청 전송을 하는 몰큘
@@ -25,7 +26,8 @@ const EmailCertification = ({
                                 onEmailChange,
                                 onSubmit,
                                 error,
-                                emailErrorHelperText
+                                emailErrorHelperText,
+                                disabled
                             }: EmailCertificationProps) => {
     const errorMessage = useMemo(() => {
         if (error) return emailErrorHelperText
@@ -33,9 +35,9 @@ const EmailCertification = ({
     }, [error])
     return <div className={classNames(className, style['email-certification'])}>
         <Input className={style['email-certification__email']} variant={inputVariant} label="이메일" value={emailValue}
-               onChange={onEmailChange} error={error} helperText={errorMessage}/>
+               onChange={onEmailChange} error={error} helperText={errorMessage} disabled={disabled}/>
         <Button className={style['email-certification__submit-button']} variant={submitButtonVariant}
-                onClick={onSubmit}>이메일 인증</Button>
+                onClick={onSubmit} disabled={disabled}>이메일 인증</Button>
         <Divider/>
     </div>
 }
@@ -50,7 +52,8 @@ EmailCertification.defaultProps = {
     onSubmit: () => { /** * */
     },
     error: false,
-    emailErrorHelperText: '이미 등록된 이메일이거나 메일형식을 다시 확인해주세요.'
+    emailErrorHelperText: '이미 등록된 이메일이거나 메일형식을 다시 확인해주세요.',
+    disabled: false
 }
 
 export default EmailCertification;

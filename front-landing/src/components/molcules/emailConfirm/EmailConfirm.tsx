@@ -12,6 +12,7 @@ interface EmailConfirmProps {
     confirmValue?: string;
     onConfirmValueChange?: React.ChangeEventHandler<HTMLInputElement>;
     disabled?: boolean;
+    error?: boolean;
 }
 
 // 인증번호 입력 가능 인풋 영역
@@ -21,7 +22,8 @@ const EmailConfirm = ({
                           remainTime,
                           confirmValue,
                           onConfirmValueChange,
-                          disabled
+                          disabled,
+                          error
                       }: EmailConfirmProps) => {
     const remainTimeFormat: React.ReactNode | undefined = useMemo(() => {
         if (remainTime === undefined) return undefined
@@ -32,7 +34,7 @@ const EmailConfirm = ({
     return <div className={classNames(className, style['email-confirm'])}>
         <Input className={style['email-confirm__input']} value={confirmValue} onChange={onConfirmValueChange} endItem={
             remainTimeFormat
-        } placeholder="000000" label="인증번호" disabled={disabled}/>
+        } placeholder="000000" label="인증번호" disabled={disabled} error={error}/>
         <Button onClick={onSubmit} className={style['email-confirm__button']} disabled={disabled}>
             인증
         </Button>
@@ -47,7 +49,8 @@ EmailConfirm.defaultProps = {
     confirmValue: '',
     onConfirmValueChange: () => {/** * */
     },
-    disabled: false
+    disabled: false,
+    error: false
 }
 
 export default EmailConfirm;
