@@ -4,7 +4,7 @@ import {Add, ListAlt} from "@mui/icons-material";
 import classNames from "classnames";
 import {ApolloProvider} from "@apollo/react-hooks";
 import NumberAdd from "../../components/templates/NumberAdd/NumberAdd";
-import NumberList from "../../components/templates/NumberList/NumberList";
+import NumberList from "../../components/templates/numberList/NumberList";
 import IconLabelTabs from "../../components/molcules/tabs/IconLabelTabs";
 import Card from "../../components/atoms/card/Card";
 import {AddressRepository} from "../../util/AddressRepository";
