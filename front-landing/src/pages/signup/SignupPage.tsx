@@ -4,7 +4,7 @@ import {useNavigate} from "react-router-dom";
 import IdPassword from "../../components/molcules/idPassword/IdPassword";
 import EmailCertification from "../../components/molcules/emailCertification/EmailCertification";
 import EmailConfirm from "../../components/molcules/emailConfirm/EmailConfirm";
-import AuthRepository from "../../util/network";
+import AuthRepository from "../../util/AuthRepository";
 import Card from "../../components/atoms/card/Card";
 import Input from "../../components/atoms/input/Input";
 import Divider from "../../components/atoms/divider/Divider";

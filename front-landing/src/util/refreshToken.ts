@@ -1,4 +1,4 @@
-import AuthRepository from "./network";
+import AuthRepository from "./AuthRepository";
 import {getCookie} from "./cookieUtil";
 
 const onSilentRefresh = () => {

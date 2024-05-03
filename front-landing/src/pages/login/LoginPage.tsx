@@ -3,7 +3,7 @@ import classNames from "classnames";
 import IdPassword from "../../components/molcules/idPassword/IdPassword";
 import Card from "../../components/atoms/card/Card";
 import Button from "../../components/atoms/button/Button";
-import AuthRepository from "../../util/network";
+import AuthRepository from "../../util/AuthRepository";
 import {ACCESS_TOKEN, delCookie, REFRESH_TOKEN} from "../../util/cookieUtil";
 import style from "./style/LoginPage.module.scss";
 
