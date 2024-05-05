@@ -4,7 +4,7 @@ import {ApolloProvider} from "@apollo/react-hooks";
 import LoginPage from "../pages/login/LoginPage";
 import SignupPage from "../pages/signup/SignupPage";
 import MainPage from "../pages/main/MainPage";
-import {AddressRepository} from "../util/AddressRepository";
+import {apolloClient} from "../api/apollo/apolloClient";
 
 export const AppRouter = () => {
     const navigate = useNavigate();
@@ -15,7 +15,7 @@ export const AppRouter = () => {
         navigate('/main')
     }
 
-    return <ApolloProvider client={AddressRepository.client}>
+    return <ApolloProvider client={apolloClient}>
         <Routes>
             <Route path="/" element={<LoginPage navigateToSignup={navigateToSignup} navigateToMain={navigateToMain}/>}/>
             <Route path="/signup" element={<SignupPage/>}/>
