@@ -1,13 +1,14 @@
-import React from "react";
-import {Route, Routes, useLocation, useNavigate} from "react-router-dom";
+import React, {useCallback, useEffect, useState} from "react";
+import {Route, Routes, useNavigate} from "react-router-dom";
 import {Add, ListAlt} from "@mui/icons-material";
 import classNames from "classnames";
-import {ApolloProvider} from "@apollo/react-hooks";
+import {useLazyQuery, useMutation} from "@apollo/react-hooks";
 import NumberAdd from "../../components/templates/NumberAdd/NumberAdd";
 import NumberList from "../../components/templates/numberList/NumberList";
 import IconLabelTabs from "../../components/molcules/tabs/IconLabelTabs";
 import Card from "../../components/atoms/card/Card";
-import {AddressRepository} from "../../util/AddressRepository";
+import {GET_PEOPLE, POST_ADDRESS_DELETE} from "../../api/apollo/gql/address.gql";
+import {AddressItemType} from "../../components/molcules/list/AddressItem";
 import style from "./style/MainPage.module.scss";
 
 const tabItems = [
@@ -16,9 +17,29 @@ const tabItems = [
 ]
 
 const MainPage = () => {
-    const location = useLocation();
+    const [refetch, {
+        loading,
+        error,
+        data
+    }] = useLazyQuery(GET_PEOPLE);
+
+    const [a] = useMutation(POST_ADDRESS_DELETE);
+
     const navigate = useNavigate();
-    const [value, setValue] = React.useState(0);
+    const [value, setValue] = useState(0);
+    const [items, setItems] = useState([]);
+
+    useEffect(() => {
+        if (value === 1) {
+            refetch().then((response) => {
+                setItems(
+                    response?.data?.getPeople?.map((item: AddressItemType) => {
+                        return {name: item.name, phone: item.phone}
+                    })
+                );
+            });
+        }
+    }, [value])
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         console.log(newValue)
         setValue(newValue);
@@ -26,22 +47,25 @@ const MainPage = () => {
         return navigate(`/main/list`);
     };
 
-    // useEffect(() => {
-    //     AddressRepository.createOrUpdatePerson('고명진', '010-7658-7639').then(r => {
-    //             console.log('hi');
-    //         }
-    //     );
-    // }, []);
+    const onDeleteClick = useCallback((phone: string) => {
+        a({variables: {request: {phone}}}).then((response) => {
+            refetch().then((response) => {
+                setItems(
+                    response?.data?.getPeople?.map((item: AddressItemType) => {
+                        return {name: item.name, phone: item.phone}
+                    })
+                );
+            });
+        });
+    }, [])
 
-    return <ApolloProvider client={AddressRepository.client}>
-        <Card className={classNames(style['main-page'])}>
-            <IconLabelTabs value={value} handleChange={handleChange} tabItems={tabItems}/>
-            <Routes>
-                <Route path="/list" element={<NumberList/>}/>
-                <Route path="/" element={<NumberAdd className={style['main-page__number-add-wrapper']}/>}/>
-            </Routes>
-        </Card>
-    </ApolloProvider>
+    return <Card className={classNames(style['main-page'])}>
+        <IconLabelTabs value={value} handleChange={handleChange} tabItems={tabItems}/>
+        <Routes>
+            <Route path="/list" element={<NumberList items={items} loading={loading} onDelete={onDeleteClick}/>}/>
+            <Route path="/" element={<NumberAdd className={style['main-page__number-add-wrapper']}/>}/>
+        </Routes>
+    </Card>;
 };
 
 export default MainPage;

@@ -6,13 +6,14 @@ import style from "./style/AddressList.module.scss";
 interface AddressListProps {
     className?: string;
     items?: Array<AddressItemType>;
+    onDelete?: (phone:string) => void;
 }
 
-const AddressList = ({className, items}: AddressListProps) => {
+const AddressList = ({className, items, onDelete}: AddressListProps) => {
     return <div className={classNames(className, style['address-list'])}>
         {
             items?.map((item) => {
-                return <AddressItem item={item}/>
+                return <AddressItem item={item} onDelete={onDelete}/>
             })
         }
     </div>
@@ -20,7 +21,10 @@ const AddressList = ({className, items}: AddressListProps) => {
 
 AddressList.defaultProps = {
     className: '',
-    items: []
+    items: [],
+    onDelete: () => {
+        /** * */
+    }
 };
 
 export default AddressList;

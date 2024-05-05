@@ -2,7 +2,6 @@ import {ApolloClient, createHttpLink, InMemoryCache} from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import {ACCESS_TOKEN, getCookie} from "./cookieUtil";
 
-
 export class AddressRepository {
     private static cache = new InMemoryCache(); // apollo client는 gql 결과를 인메모리캐시에 저장함.
 
@@ -25,6 +24,16 @@ export class AddressRepository {
     static client = new ApolloClient({
         link: this.authLink.concat(this.httpLink),
         cache: this.cache,
+        defaultOptions:  {
+            watchQuery: {
+                fetchPolicy: 'no-cache',
+                errorPolicy: 'ignore',
+            },
+            query: {
+                fetchPolicy: 'no-cache',
+                errorPolicy: 'all',
+            },
+        },
     });
 
     static createOrUpdatePerson = async (name: string, phone: string) => {

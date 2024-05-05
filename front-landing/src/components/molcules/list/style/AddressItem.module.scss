@@ -1,3 +1,4 @@
-.address-item{
-
+.address-item {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto; /* 세 열을 만들어 첫 번째 두 아이템에는 동일한 공간을, 마지막 아이템에는 자기 크기만큼의 공간을 할당합니다 */
 }

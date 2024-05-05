@@ -8,3 +8,18 @@ export const POST_ADDRESS_INFO = gql`
         }
     }
 `;
+
+export const GET_PEOPLE = gql`
+    query {
+        getPeople {
+            name
+            phone
+        }
+    }
+`;
+
+export const POST_ADDRESS_DELETE = gql`
+    mutation ($request: DeleteRequest) {
+        deletePerson (request: $request)
+    }
+`;

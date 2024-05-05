@@ -25,23 +25,16 @@ const NumberAdd = ({className}: NumberAdd) => {
 
     if (loading) {
         console.log('loading중')
-    }
-    if (error) {
-        console.log('error')
-        console.log(`${error}`)
     } else if (data !== undefined) {
-        console.log("data")
-        console.log(data)
-        console.log(data?.phoneRequest)
-        window.confirm('성공')
+        console.log(`data ${data}`)
     }
 
     const onSaveClick = () => {
-        mutateFunction({variables: {phoneRequest: {name, phone}}}).catch((error)=>{
-            console.log('error')
-            console.log(`${error}`)
+        mutateFunction({variables: {phoneRequest: {name, phone}}}).catch((error) => {
+            console.log(`error ${error}`)
         })
     }
+
     return <div className={classNames(className, style['number-add'])}>
         <Input value={name} label='이름' onChange={onNameChange} autoFocus/>
         <Input value={phone} label='전화번호' onChange={onPhoneChange}/>
